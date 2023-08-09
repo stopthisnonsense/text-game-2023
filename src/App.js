@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import Devscreen from './debugScreen/DevScreen';
 
 function App() {
-	const [playerName, setPlayerName] = useState(Game.player.name);
-
+	const [playerName, setPlayerName] = useState('');
+	const [reset, resetGame] = useState(false);
 	return (
 		<div className='App'>
 			<header className='App-header'>
@@ -31,6 +31,7 @@ function App() {
 						}
 
 						Game.init();
+						setPlayerName(Game.player.name);
 					}}
 				>
 					Start Game
@@ -44,13 +45,14 @@ function App() {
 					</div>
 				</div>
 				<div>
-					<h2>Dev Console</h2>
-					<Devscreen
-						game={Game}
-						globals={Game.globals}
-						map={Game.map}
-						player={Game.player}
-					></Devscreen>
+					{reset && (
+						<Devscreen
+							game={Game}
+							globals={Game.globals}
+							map={Game.map}
+							player={Game.player}
+						></Devscreen>
+					)}
 				</div>
 				<button
 					onClick={() => {
@@ -61,11 +63,13 @@ function App() {
 					Reset Game
 				</button>
 				<button
-					onClick={() => {
+					onClick={(e) => {
 						Game.devMode();
+						setPlayerName(Game.player.name);
+						resetGame(Game.globals.devMode);
+						e.target.remove();
 					}}
 				>
-					{' '}
 					Enable DevMode
 				</button>
 			</div>

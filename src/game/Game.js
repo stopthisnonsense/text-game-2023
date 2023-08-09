@@ -15,6 +15,7 @@ const Game = {
 		if (this.globals.devMode === false) {
 			console.log('Dev Mode Started');
 			this.globals.devMode = true;
+			return this.resetGame();
 		}
 	},
 	init: function () {
@@ -42,9 +43,9 @@ const Game = {
 			}
 
 			let key = `${x},${y}`;
-			if (x % 2 == 0) {
+			if (x % 2 === 0) {
 				this.map[key] = ',';
-			} else if (x % 13 == 0 && y % 13 == 0) {
+			} else if (x % 13 === 0 && y % 13 === 0) {
 				this.map[key] = '^';
 			} else {
 				this.map[key] = '.';

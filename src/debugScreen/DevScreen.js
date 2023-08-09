@@ -1,10 +1,10 @@
-import Game from '../game/Game.js';
-export default function DevScreen({ globals, player, map }) {
+export default function DevScreen({ game }) {
 	return (
 		<>
-			<div>Globals {JSON.stringify(globals)}</div>
-			<div class=''>Player: {JSON.stringify(player)}</div>
-			<div>World: {JSON.stringify(map)}</div>
+			<h2>Dev Console</h2>
+			<div>Globals {JSON.stringify(game.globals)}</div>
+			<div className=''>Player: {JSON.stringify(game.player)}</div>
+			<div>World: {JSON.stringify(game.map)}</div>
 		</>
 	);
 }
