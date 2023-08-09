@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import Game from './game/Game.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Devscreen from './debugScreen/DevScreen';
 
 function App() {
-	const [playerName, setPlayerName] = useState('');
+	const [playerName, setPlayerName] = useState(Game.player.name);
+
 	return (
 		<div className='App'>
 			<header className='App-header'>
@@ -40,6 +42,15 @@ function App() {
 					<div className='infobox'>
 						<h3>{playerName}</h3>
 					</div>
+				</div>
+				<div>
+					<h2>Dev Console</h2>
+					<Devscreen
+						game={Game}
+						globals={Game.globals}
+						map={Game.map}
+						player={Game.player}
+					></Devscreen>
 				</div>
 				<button
 					onClick={() => {
