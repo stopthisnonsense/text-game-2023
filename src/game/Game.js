@@ -1,26 +1,7 @@
 const ROT = require('rot-js');
 
-const Game = {
-	display: null,
-	globals: {
-		devMode: false,
-		timesReset: 0,
-	},
-	player: {
-		name: 'The Player',
-		x: null,
-		y: null,
-	},
-	map: {},
-	devMode: function () {
-		console.log(`Dev Mode Enabled: ${this.globals.devMode}`);
-		if (this.globals.devMode === false) {
-			console.log('Dev Mode Started');
-			this.globals.devMode = true;
-			return this.resetGame();
-		}
-	},
-	init: function () {
+function init() {
+	return function () {
 		this.display = new ROT.Display();
 		if (document.querySelector('.App canvas')) {
 			document.querySelector('.App canvas').remove();
@@ -31,48 +12,111 @@ const Game = {
 		window.removeEventListener('keydown', this._keyCheck);
 		window.addEventListener('keydown', this._keyCheck);
 		return;
-	},
-	_keyCheck: function (e) {
-		e.preventDefault();
-		Game._drawWholeMap();
-		switch (e.key) {
-			case 'ArrowUp':
-				Game.player.y -= 1;
-				break;
-			case 'ArrowLeft':
-				Game.player.x -= 1;
-				break;
-			case 'ArrowRight':
-				Game.player.x += 1;
-				break;
-			case 'ArrowDown':
-				Game.player.y += 1;
-				break;
-			default:
-				break;
-		}
-		Game.display.draw(Game.player.x, Game.player.y, `@`, `#0f0`);
-	},
-	_generatePlayer: function () {
-		for (let key in this.map) {
-			let parts = key.split(',');
-			let x = parseInt(parts[0]);
-			let y = parseInt(parts[1]);
+	};
+}
 
-			this.player.x = x;
-			this.player.y = y;
-			this.display.drawOver(this.player.x, this.player.y, `@`, `#0f0`);
+const keyCheck = function (e) {
+	e.preventDefault();
+	Game._drawWholeMap();
+
+	switch (e.key) {
+		case 'ArrowUp':
+			for (let key in Game.map) {
+				let parts = key.split(',');
+				let x = parseInt(parts[0]);
+				let y = parseInt(parts[1]);
+				if (x === Game.player.x && y === Game.player.y - 1) {
+					Game.player.y -= 1;
+					break;
+				}
+			}
 			break;
+		case 'ArrowLeft':
+			for (let key in Game.map) {
+				let parts = key.split(',');
+				let x = parseInt(parts[0]);
+				let y = parseInt(parts[1]);
+				if (x === Game.player.x - 1 && y === Game.player.y) {
+					Game.player.x -= 1;
+					break;
+				}
+			}
+			break;
+		case 'ArrowRight':
+			for (let key in Game.map) {
+				let parts = key.split(',');
+				let x = parseInt(parts[0]);
+				let y = parseInt(parts[1]);
+				if (x === Game.player.x + 1 && y === Game.player.y) {
+					Game.player.x += 1;
+					break;
+				}
+			}
+			break;
+
+		case 'ArrowDown':
+			for (let key in Game.map) {
+				let parts = key.split(',');
+				let x = parseInt(parts[0]);
+				let y = parseInt(parts[1]);
+				if (x === Game.player.x && y === Game.player.y + 1) {
+					Game.player.y += 1;
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+	}
+	Game.display.draw(Game.player.x, Game.player.y, `@`, `#0f0`);
+};
+const resetGame = function () {
+	this.map = {};
+	this.init();
+	this.globals.timesReset = this.globals.timesReset + 1;
+	this.player.name = `The Player of Reset ${this.globals.timesReset}`;
+};
+
+const generatePlayer = function () {
+	for (let key in this.map) {
+		let parts = key.split(',');
+		let x = parseInt(parts[0]);
+		let y = parseInt(parts[1]);
+
+		this.player.x = x;
+		this.player.y = y;
+		this.display.drawOver(this.player.x, this.player.y, `@`, `#0f0`);
+		break;
+	}
+	return;
+};
+const Game = {
+	display: null,
+	globals: {
+		devMode: false,
+		timesReset: 0,
+	},
+	player: {
+		name: 'The Player',
+		x: null,
+		y: null,
+		hp: 10,
+		maxHp: 10,
+		status: [],
+	},
+	map: {},
+	devMode: function () {
+		console.log(`Dev Mode Enabled: ${this.globals.devMode}`);
+		if (this.globals.devMode === false) {
+			console.log('Dev Mode Started');
+			this.globals.devMode = true;
+			return this.resetGame();
 		}
-		return;
 	},
-	resetGame: function () {
-		this.map = {};
-		this.init();
-		this.globals.timesReset = this.globals.timesReset + 1;
-		this.player.name = `The Player of Reset ${this.globals.timesReset}`;
-		// console.log(this, this.map.toString());
-	},
+	init: init(),
+	_keyCheck: keyCheck,
+	_generatePlayer: generatePlayer,
+	resetGame: resetGame,
 	_generateMap: function () {
 		let digger = new ROT.Map.Digger();
 		let digCallback = function (x, y, value) {

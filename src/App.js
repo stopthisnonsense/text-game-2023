@@ -42,6 +42,10 @@ function App() {
 					<h2>Command Console</h2>
 					<div className='infobox'>
 						<h3>{playerName}</h3>
+						<div>
+							<h4>h4:</h4>
+							{Game.player.hp}/{Game.player.maxHp}
+						</div>
 					</div>
 				</div>
 				<div>
