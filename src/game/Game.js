@@ -15,7 +15,7 @@ function init() {
 	};
 }
 
-const keyCheck = function (e) {
+function keyCheck(e) {
 	e.preventDefault();
 	Game._drawWholeMap();
 
@@ -68,13 +68,19 @@ const keyCheck = function (e) {
 		default:
 			break;
 	}
+	if (Game.map[`${Game.player.x},${Game.player.y}`] === '>') {
+		console.log(`${Game.player.name} at stairs`);
+		Game.globals.floor = Game.globals.floor + 1;
+		Game.resetGame();
+	}
+	console.log(Game.map[`${Game.player.x},${Game.player.y}`]);
 	Game.display.draw(Game.player.x, Game.player.y, `@`, `#0f0`);
-};
+}
 const resetGame = function () {
 	this.map = {};
 	this.init();
 	this.globals.timesReset = this.globals.timesReset + 1;
-	this.player.name = `The Player of Reset ${this.globals.timesReset}`;
+	this.player.name = `The Player of Reset ${this.globals.timesReset}, Floor ${Game.globals.floor}`;
 };
 
 const generatePlayer = function () {
@@ -95,6 +101,7 @@ const Game = {
 	globals: {
 		devMode: false,
 		timesReset: 0,
+		floor: 1,
 	},
 	player: {
 		name: 'The Player',
@@ -134,7 +141,9 @@ const Game = {
 			}
 		};
 		digger.create(digCallback.bind(this));
+		// Pull the last tile from the map object
 		let lastTile = Object.keys(Game.map)[Object.keys(Game.map).length - 1];
+		// Set the last tile to be stairs
 		Game.map[lastTile] = '>';
 		this._drawWholeMap();
 	},
