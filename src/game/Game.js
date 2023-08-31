@@ -134,6 +134,8 @@ const Game = {
 			}
 		};
 		digger.create(digCallback.bind(this));
+		let lastTile = Object.keys(Game.map)[Object.keys(Game.map).length - 1];
+		Game.map[lastTile] = '>';
 		this._drawWholeMap();
 	},
 	_drawWholeMap: function () {
