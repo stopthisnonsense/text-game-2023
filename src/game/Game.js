@@ -1,3 +1,4 @@
+import Player from './player';
 const ROT = require('rot-js');
 
 function init() {
@@ -103,14 +104,7 @@ const Game = {
 		timesReset: 0,
 		floor: 1,
 	},
-	player: {
-		name: 'The Player',
-		x: null,
-		y: null,
-		hp: 10,
-		maxHp: 10,
-		status: [],
-	},
+	player: Player,
 	map: {},
 	devMode: function () {
 		console.log(`Dev Mode Enabled: ${this.globals.devMode}`);
